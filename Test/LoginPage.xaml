@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="test.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Frame x:Name="frame">
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="Login" FontSize="36" Margin="4" TextAlignment="Center"/>
+                <TextBlock x:Name="ErrorMessage" Text="" FontSize="20" Margin="4" Foreground="Red" TextAlignment="Center"/>
+                <TextBox x:Name="UsernameTextBox" PlaceholderText="Username" Margin="4" Width="250"/>
+                <PasswordBox x:Name="PasswordTextBox" PlaceholderText="Password" Margin="4" Width="250"/>
+                <Button Content="Login" Background="DodgerBlue" Foreground="White"
+        Click="Login" Width="80" HorizontalAlignment="Center" Margin="0,20"/>
+                <TextBlock Text="" x:Name="Message"
+                TextAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <TextBlock Text="Don't have an account?"
+                TextAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <HyperlinkButton x:Name="RegisterButtonTextBlock" Content="Register now"
+               Click="Register"
+               Foreground="DodgerBlue"
+               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            </StackPanel>
+        </Grid>
+    </Frame>
+</Page>
