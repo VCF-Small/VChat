@@ -50,37 +50,62 @@ namespace test
         public void Register(object sender, RoutedEventArgs e)
         {
             var username = UsernameText.Text;
-            var firstname = FirstnameText.Text;
-            var lastname = LastnameText.Text;
-            var email = EmailText.Text;
-            var phone = PhoneText.Text;
-            var address = AddressText.Text;
-            var password = PasswordText.Password;
-            var confirmpass = ConfirmpasswordText.Password;
-            if (username_avl && username!= "" && firstname != "" && lastname != "" && email != "" && phone != "" && address != "" && password != "" && (password == confirmpass))
+
+
+            check_sql = "SELECT [Id] FROM [dbo].[VChat_Users] WHERE [Username] = '" + username + "'";
+            command.CommandText = check_sql;
+            var reader = command.ExecuteReader();
+
+            if (reader.HasRows)
             {
-                var reg_sql = "INSERT INTO [dbo].[VChat_Users] ([Username], [Password], [Firstname], [Lastname], [Email], [Phone], [Address]) VALUES('" + username + "', '" + password + "','" + firstname + "', '" + lastname + "','" + email + "','" + phone + "', '" + address + "')";
-                command.CommandText = reg_sql;
-                var adapter = command;
-                if (adapter.ExecuteNonQuery() > 0)
+                Message.Text = "Username Already Exists";
+                Message.Foreground = new SolidColorBrush(Colors.Red);
+                username_avl = false;
+            }
+
+            else
+            {
+                var firstname = FirstnameText.Text;
+                var lastname = LastnameText.Text;
+                var email = EmailText.Text;
+                var phone = PhoneText.Text;
+                var address = AddressText.Text;
+                var password = PasswordText.Password;
+                var confirmpass = ConfirmpasswordText.Password;
+                reader.Close();
+                if (username != "" && firstname != "" && lastname != "" && email != "" && phone != "" && address != "" && password != "" && (password == confirmpass))
                 {
+                    var reg_sql = "INSERT INTO [dbo].[VChat_Users] ([Username], [Password], [Firstname], [Lastname], [Email], [Phone], [Address]) VALUES('" + username + "', '" + password + "','" + firstname + "', '" + lastname + "','" + email + "','" + phone + "', '" + address + "')";
+                    command.CommandText = reg_sql;
+
+
+                    if (command.ExecuteNonQuery() > 0)
+                    {
+                        var frn_list = "CREATE TABLE [dbo].[" + username + "_friendlist]([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), [Friendusername] NVARCHAR(50) NOT NULL)";
+                        command.CommandText = frn_list;
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            username_avl = false;
+                        }
+
+                    }
                     Message.Text = "Registered Successfully!! Go To Login Page By Clicking Below";
                     Message.Foreground = new SolidColorBrush(Colors.Green);
                 }
-
+                else
+                {
+                    Message.Text = "Plese fill all feilds and Password and Confirm Password should match";
+                    Message.Foreground = new SolidColorBrush(Colors.Red);
+                }
             }
-            else
-            {
-                Message.Text = "Plese fill all feilds and Password and Confirm Password should match";
-                Message.Foreground = new SolidColorBrush(Colors.Red);
-            }
+            reader.Close();
         }
         public void Check_Username(object sender, RoutedEventArgs e)
         {
             var username = UsernameText.Text;
             check_sql = "SELECT [Id] FROM [dbo].[VChat_Users] WHERE [Username] = '" + username + "'";
             command.CommandText = check_sql;
-            
+
             var reader = command.ExecuteReader();
             if (reader.HasRows)
             {
