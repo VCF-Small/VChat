@@ -24,7 +24,7 @@ namespace test
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public static string session 
+        public static string session
         {
             get; set;
         }
@@ -64,8 +64,9 @@ namespace test
                 output.Text = text;
                 output.Foreground = new SolidColorBrush(Colors.White);
                 output.Name = reader.GetValue(2).ToString();
+                output.Width = 350;
+                output.Margin = new Thickness(0, 0, 0, 0);
                 output.PointerPressed += ChatBox;
-                output.PointerPressed += ProfileSection;
                 list.Items.Add(output);
             }
             reader.Close();
@@ -84,14 +85,22 @@ namespace test
 
             while (reader.Read())
             {
-                var text = reader.GetValue(0).ToString().ToUpperInvariant() + " " + reader.GetValue(1).ToString().ToUpperInvariant();
+                /* var text = reader.GetValue(0).ToString().ToUpperInvariant() + " " + reader.GetValue(1).ToString().ToUpperInvariant();
                 var output = new TextBlock();
                 output.Text = text;
                 output.Foreground = new SolidColorBrush(Colors.White);
                 output.Name = reader.GetValue(2).ToString();
-                output.PointerPressed += ChatBox;
-                output.PointerPressed += ProfileSection;
-                list.Items.Add(output);
+                output.PointerPressed += ChatBox; */
+                // var output = "<ListViewItem> <Grid HorizontalAlignment='Center' Margin='5'> <Grid.ColumnDefinitions> <ColumnDefinition Width='50'/> <ColumnDefinition Width='150'/> <ColumnDefinition Width='50*'/> </Grid.ColumnDefinitions> <Border Width='40' Height='40' CornerRadius='25' BorderBrush='White' BorderThickness='0.6'/> <Border Width='10' Height='10' VerticalAlignment='Bottom' Margin='5' HorizontalAlignment='Right' CornerRadius='15' Background='#FF87EE87'/><StackPanel Grid.Column='1'> <TextBlock Foreground='White' Text='Himanshu' Margin='10 0'/> <TextBlock Foreground='White' Text='VCF' Margin='10 0' TextTrimming='CharacterEllipsis' Opacity='0.6' FontSize='11'/> </StackPanel><Border Grid.Column='2' Width='20' Height='20' CornerRadius='15' Background='White' HorizontalAlignment='Center' VerticalAlignment='Bottom' Margin='0,0,0,10'> <TextBlock Foreground='Black' FontSize='11' Text='5' HorizontalAlignment='Center' VerticalAlignment='Center'/> </Border> </Grid> </ListViewItem>";
+
+                Button new1 = new Button();
+
+                new1.Content = reader.GetValue(0).ToString().ToUpper() + " " + reader.GetValue(1).ToString().ToUpper();
+                new1.Name = reader.GetValue(2).ToString();
+                new1.Width = 300;
+                new1.Background = new SolidColorBrush(Colors.Transparent);
+                new1.Click += ChatBox;
+                list.Items.Add(new1);
 
             }
             reader.Close();
@@ -100,13 +109,14 @@ namespace test
 
         }
 
-        private void ProfileSection(object sender, RoutedEventArgs e)
+
+
+        private void ProfileSection(ref Button user)
         {
-            var user = (TextBlock)sender;
             var sql = "SELECT [Firstname], [Lastname], [Username], [Email], [Phone], [Address] FROM [dbo].[VChat_Users] WHERE(Username = '" + user.Name + "')";
             command.CommandText = sql;
             var reader = command.ExecuteReader();
-            while(reader.Read())
+            while (reader.Read())
             {
                 Fullname.Text = (reader.GetValue(0).ToString() + " " + reader.GetValue(1).ToString()).ToUpper();
                 Username.Text = reader.GetValue(2).ToString();
@@ -116,22 +126,22 @@ namespace test
             }
             reader.Close();
             command.Dispose();
-
-
         }
 
         private void ChatBox(object sender, RoutedEventArgs e)
         {
-            var user = (TextBlock)sender;
-            var sql = "SELECT [Firstname], [Lastname] FROM [dbo].[VChat_Users] WHERE(Username = '"+user.Name+"')";
+            var user = (Button)sender;
+            var sql = "SELECT [Firstname], [Lastname] FROM [dbo].[VChat_Users] WHERE(Username = '" + user.Name + "')";
             command.CommandText = sql;
             var reader = command.ExecuteReader();
-            while(reader.Read())
+            while (reader.Read())
             {
                 Recevername.Text = (reader.GetValue(0).ToString() + " " + reader.GetValue(1).ToString()).ToUpper();
             }
+
             reader.Close();
             command.Dispose();
+            ProfileSection(ref user);
         }
 
         /**
