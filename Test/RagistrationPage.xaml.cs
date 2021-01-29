@@ -81,7 +81,7 @@ namespace test
 
                     if (command.ExecuteNonQuery() > 0)
                     {
-                        var frn_list = "CREATE TABLE [dbo].[" + username + "_friendlist]([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), [Friendusername] NVARCHAR(50) NOT NULL)";
+                        var frn_list = "CREATE TABLE [dbo].[" + username + "_friendlist]([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), [Friendusername] NVARCHAR(50) NOT NULL, [Status] NVARCHAR(50) NOT NULL)";
                         command.CommandText = frn_list;
                         if (command.ExecuteNonQuery() > 0)
                         {
