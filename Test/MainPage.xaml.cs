@@ -103,8 +103,6 @@ namespace test
             connection.Open();
             command.Connection = connection;
 
-            
-
         }
 
         private void ChatList(object sender, RoutedEventArgs e)
@@ -119,7 +117,6 @@ namespace test
 
             while (reader.Read())
             {
-
                 if (reader.GetValue(1).ToString() == "A")
                 {
                     username.Add(reader.GetValue(0).ToString());
