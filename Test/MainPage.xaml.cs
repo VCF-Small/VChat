@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,6 +40,20 @@ namespace test
             command = new SqlCommand();
             connection.Open();
             command.Connection = connection;
+
+            var sql2 = "SELECT [Firstname], [Lastname], [Username], [Email], [Phone], [Address] FROM [dbo].[VChat_Users] WHERE(Username = '" + session + "')";
+            command.CommandText = sql2;
+            var reader2 = command.ExecuteReader();
+            while (reader2.Read())
+            {
+                Fullname.Text = (reader2.GetValue(0).ToString() + " " + reader2.GetValue(1).ToString()).ToUpper();
+                Username.Text = reader2.GetValue(2).ToString();
+                Email.Text = reader2.GetValue(3).ToString();
+                Phone.Text = reader2.GetValue(4).ToString();
+                Address.Text = reader2.GetValue(5).ToString();
+            }
+            reader2.Close();
+            command.Dispose();
 
             var FrindListTable = session + "_friendlist";
             list.Items.Clear();
@@ -103,8 +117,7 @@ namespace test
             connection.Open();
             command.Connection = connection;
 
-
-
+            Send.Children.Clear();
         }
 
         private void ChatList(object sender, RoutedEventArgs e)
@@ -119,17 +132,16 @@ namespace test
 
             while (reader.Read())
             {
-
                 if (reader.GetValue(1).ToString() == "A")
                 {
                     username.Add(reader.GetValue(0).ToString());
                 }
-
+                    
             }
             reader.Close();
             command.Dispose();
 
-            foreach (string user in username)
+            foreach(string user in username)
             {
                 var sql = "SELECT [Firstname], [Lastname], [Username] FROM [dbo].[VChat_Users] WHERE(Username = '" + user + "')";
                 command.CommandText = sql;
@@ -183,6 +195,8 @@ namespace test
 
         private void ChatBox(object sender, RoutedEventArgs e)
         {
+            Send.Children.Add(textbox);
+
             var user = (Button)sender;
             var sql = "SELECT [Firstname], [Lastname] FROM [dbo].[VChat_Users] WHERE(Username = '" + user.Name + "')";
             command.CommandText = sql;
@@ -207,7 +221,7 @@ namespace test
 
             while (reader.Read())
             {
-                if (reader.GetValue(2).ToString() != session)
+                if(reader.GetValue(2).ToString() != session)
                 {
                     StackPanel newpanal = new StackPanel();
                     TextBlock new2 = new TextBlock();
@@ -233,7 +247,7 @@ namespace test
                     grid.Children.Add(new1);
                     newpanal.Children.Add(grid);
                     list.Items.Add(newpanal);
-                }
+                } 
             }
             reader.Close();
             command.Dispose();
@@ -244,7 +258,7 @@ namespace test
         {
             string FriendListTable = session + "_friendlist";
             var FriendUser = (Button)sender;
-            var sql = "INSERT INTO [dbo].[" + FriendListTable + "]([Friendusername], [Status]) VALUES('" + FriendUser.Name.ToString() + "', 'S')";
+            var sql = "INSERT INTO [dbo].[" + FriendListTable + "]([Friendusername], [Status]) VALUES('"+FriendUser.Name.ToString()+"', 'S')";
             command.CommandText = sql;
             command.ExecuteNonQuery();
 
@@ -268,10 +282,10 @@ namespace test
             RequestList.Items.Clear();
             List<string> username = new List<string>();
 
-            while (reader.Read())
+            while(reader.Read())
             {
 
-                if (reader.GetValue(1).ToString() == "R")
+                if(reader.GetValue(1).ToString() == "R")
                 {
                     username.Add(reader.GetValue(0).ToString());
                 }
@@ -279,9 +293,9 @@ namespace test
             reader.Close();
             command.Dispose();
 
-            foreach (string user in username)
+            foreach(string user in username)
             {
-                var sql1 = "SELECT [Firstname], [Lastname], [Username] FROM [dbo].[VChat_Users] WHERE(Username = '" + user + "')";
+                var sql1 = "SELECT [Firstname], [Lastname], [Username] FROM [dbo].[VChat_Users] WHERE(Username = '" + user+ "')";
                 command.CommandText = sql1;
                 var reader1 = command.ExecuteReader();
 
@@ -336,7 +350,7 @@ namespace test
             reader.Close();
             command.Dispose();
 
-            foreach (string user in username)
+            foreach(string user in username)
             {
                 var sql1 = "SELECT [Firstname], [Lastname], [Username] FROM [dbo].[VChat_Users] WHERE(Username = '" + user + "')";
                 command.CommandText = sql1;
@@ -376,13 +390,13 @@ namespace test
         {
             string FriendListTable = session + "_friendlist";
             var FriendUser = (Button)sender;
-            var sql = "UPDATE [Status] INTO [dbo].[" + FriendListTable + "] WHERE(Friendusename = '" + FriendUser.Name.ToString() + "') VALUES('A')";
+            var sql = "UPDATE [Status] INTO [dbo].[" + FriendListTable + "] WHERE(Friendusename = '"+FriendUser.Name.ToString()+"') VALUES('A')";
             command.CommandText = sql;
             command.ExecuteNonQuery();
 
             string FriendListTable1 = FriendUser.Name.ToString() + "_friendlist";
 
-            var sql1 = "UPDATE [Status] INTO [dbo].[" + FriendListTable1 + "] WHERE(Friendusername = '" + FriendUser.Name.ToString() + "') VALUES('A')";
+            var sql1 = "UPDATE [Status] INTO [dbo].[" + FriendListTable1 + "] WHERE(Friendusername = '"+FriendUser.Name.ToString()+"') VALUES('A')";
             command.CommandText = sql1;
             command.ExecuteNonQuery();
 
