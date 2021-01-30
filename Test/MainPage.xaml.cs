@@ -41,6 +41,20 @@ namespace test
             connection.Open();
             command.Connection = connection;
 
+            var sql2 = "SELECT [Firstname], [Lastname], [Username], [Email], [Phone], [Address] FROM [dbo].[VChat_Users] WHERE(Username = '" + session + "')";
+            command.CommandText = sql2;
+            var reader2 = command.ExecuteReader();
+            while (reader2.Read())
+            {
+                Fullname.Text = (reader2.GetValue(0).ToString() + " " + reader2.GetValue(1).ToString()).ToUpper();
+                Username.Text = reader2.GetValue(2).ToString();
+                Email.Text = reader2.GetValue(3).ToString();
+                Phone.Text = reader2.GetValue(4).ToString();
+                Address.Text = reader2.GetValue(5).ToString();
+            }
+            reader2.Close();
+            command.Dispose();
+
             var FrindListTable = session + "_friendlist";
             list.Items.Clear();
             var sql1 = "SELECT [Friendusername], [Status] FROM [dbo].[" + FrindListTable + "]";
@@ -103,6 +117,7 @@ namespace test
             connection.Open();
             command.Connection = connection;
 
+            Send.Children.Clear();
         }
 
         private void ChatList(object sender, RoutedEventArgs e)
@@ -180,6 +195,8 @@ namespace test
 
         private void ChatBox(object sender, RoutedEventArgs e)
         {
+            Send.Children.Add(textbox);
+
             var user = (Button)sender;
             var sql = "SELECT [Firstname], [Lastname] FROM [dbo].[VChat_Users] WHERE(Username = '" + user.Name + "')";
             command.CommandText = sql;
